@@ -5,6 +5,8 @@ import { useState } from "react";
 function LocatePage() {
   const [selected, setSelected] = useState(null);
   const [status, setStatus] = useState({});
+  const [pickupForm, setPickupForm] = useState(null); // Store selected biogas plant
+  const [wasteDetails, setWasteDetails] = useState({ quantity: "", description: "" });
 
   // Sample data arrays
   const donors = [
@@ -18,8 +20,8 @@ function LocatePage() {
   ];
 
   const biogasPlants = [
-    { distance: "2 km" },
-    { distance: "8 km" },
+    { id: 1, distance: "2 km" },
+    { id: 2, distance: "8 km" },
   ];
 
   // Buttons with IDs
@@ -43,9 +45,21 @@ function LocatePage() {
     }));
   };
 
+  const handleBiogasClick = (index) => {
+    setPickupForm(index);
+    setWasteDetails({ quantity: "", description: "" });
+  };
+
+  const handlePickupRequest = () => {
+    alert(`Pickup Requested!\nQuantity: ${wasteDetails.quantity}\nDescription: ${wasteDetails.description}`);
+    setPickupForm(null); // Close the form after submission
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-4 sm:p-6">
-      <h1 className="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-4 sm:mb-6">Find Nearby Resources</h1>
+      <h1 className="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-4 sm:mb-6">
+        Find Nearby Resources
+      </h1>
 
       {!selected && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -73,8 +87,11 @@ function LocatePage() {
 
             <div className="space-y-4">
               {getData().map((item, index) => (
-                <div key={index} className="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-center">
-                  <div className="text-center sm:text-left">
+                <div
+                  key={index}
+                  className="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-center"
+                >
+                  <div className="text-center sm:text-left w-full">
                     {selected === "donors" && (
                       <>
                         <p className="text-lg font-semibold text-gray-800">{item.name}</p>
@@ -91,19 +108,19 @@ function LocatePage() {
                       </>
                     )}
                     {selected === "biogas" && (
-                      <p className="text-lg font-semibold text-gray-800">🏭 Biogas Plant - Distance: {item.distance}</p>
+                      <>
+                        <p className="text-lg font-semibold text-gray-800">
+                          🏭 Biogas Plant - Distance: {item.distance}
+                        </p>
+                        <button
+                          className="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-md"
+                          onClick={() => handleBiogasClick(index)}
+                        >
+                          Request Pickup
+                        </button>
+                      </>
                     )}
                   </div>
-
-                  {selected !== "biogas" && (
-                    <button
-                      className={`mt-2 sm:mt-0 px-4 py-2 rounded-lg shadow-md ${status[`${selected}-${index}`] ? "bg-gray-400 cursor-not-allowed" : selected === "donors" ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"} text-white`}
-                      onClick={() => handleAction(index)}
-                      disabled={status[`${selected}-${index}`]}
-                    >
-                      {status[`${selected}-${index}`] ? (selected === "donors" ? "Accepted" : "Appointed") : selected === "donors" ? "Accept Food" : "Contact / Appoint"}
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
@@ -121,6 +138,43 @@ function LocatePage() {
                   {button.text}
                 </button>
               ))}
+          </div>
+        </div>
+      )}
+
+      {/* Pickup Form */}
+      {pickupForm !== null && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Request Pickup</h2>
+            <input
+              type="text"
+              placeholder="Enter quantity (kg)"
+              className="w-full p-2 border border-gray-300 rounded-lg mb-3 text-gray-900"
+              value={wasteDetails.quantity}
+              onChange={(e) => setWasteDetails({ ...wasteDetails, quantity: e.target.value })}
+            />
+            <textarea
+              placeholder="Enter waste description"
+              className="w-full p-2 border border-gray-300 rounded-lg mb-3 text-gray-900"
+              value={wasteDetails.description}
+              onChange={(e) => setWasteDetails({ ...wasteDetails, description: e.target.value })}
+            />
+
+            <div className="flex justify-between">
+              <button
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                onClick={() => setPickupForm(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
+                onClick={handlePickupRequest}
+              >
+                Confirm Pickup
+              </button>
+            </div>
           </div>
         </div>
       )}
