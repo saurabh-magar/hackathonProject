@@ -29,7 +29,6 @@ function LocatePage() {
     { id: "biogas", text: "Locate Biogas Plants", color: "bg-yellow-500 hover:bg-yellow-600" },
   ];
 
-  // Function to get data based on selected button
   const getData = () => {
     if (selected === "donors") return donors;
     if (selected === "volunteers") return volunteers;
@@ -37,26 +36,23 @@ function LocatePage() {
     return [];
   };
 
-  // Handle action (Accept/ Appoint)
   const handleAction = (index) => {
     setStatus((prev) => ({
       ...prev,
-      [`${selected}-${index}`]: true, // Mark as "accepted/appointed"
+      [`${selected}-${index}`]: true,
     }));
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 p-6">
-      {/* Header Section */}
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Find Nearby Resources</h1>
+    <div className="min-h-screen flex flex-col bg-gray-100 p-4 sm:p-6">
+      <h1 className="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-4 sm:mb-6">Find Nearby Resources</h1>
 
-      {/* Buttons Section (Initial State) */}
       {!selected && (
-        <div className="flex justify-center gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {buttons.map((button) => (
             <button
               key={button.id}
-              className={`px-8 py-3 text-lg font-semibold text-white rounded-lg shadow-md ${button.color}`}
+              className={`px-6 py-3 text-base sm:text-lg font-semibold text-white rounded-lg shadow-md ${button.color}`}
               onClick={() => setSelected(button.id)}
             >
               {button.text}
@@ -65,24 +61,20 @@ function LocatePage() {
         </div>
       )}
 
-      {/* Main Content Section */}
       {selected && (
-        <div className="flex w-full">
-          {/* Content Area (80%) */}
-          <div className="w-4/5 bg-white p-6 rounded-lg shadow-lg">
-            {/* Back Button */}
+        <div className="flex flex-col sm:flex-row w-full gap-4">
+          <div className="w-full sm:w-4/5 bg-white p-4 sm:p-6 rounded-lg shadow-lg">
             <button
-              className={`px-6 py-3 text-lg font-semibold text-white rounded-lg shadow-md w-full mb-4 ${buttons.find(b => b.id === selected)?.color}`}
+              className={`px-4 sm:px-6 py-2 sm:py-3 text-base sm:text-lg font-semibold text-white rounded-lg shadow-md w-full mb-4 ${buttons.find(b => b.id === selected)?.color}`}
               onClick={() => setSelected(null)}
             >
               {buttons.find(b => b.id === selected)?.text}
             </button>
 
-            {/* Data Display Section */}
             <div className="space-y-4">
               {getData().map((item, index) => (
-                <div key={index} className="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md flex justify-between items-center">
-                  <div>
+                <div key={index} className="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-center">
+                  <div className="text-center sm:text-left">
                     {selected === "donors" && (
                       <>
                         <p className="text-lg font-semibold text-gray-800">{item.name}</p>
@@ -103,10 +95,9 @@ function LocatePage() {
                     )}
                   </div>
 
-                  {/* Action Button (Disable when clicked) */}
                   {selected !== "biogas" && (
                     <button
-                      className={`px-4 py-2 rounded-lg shadow-md ${status[`${selected}-${index}`] ? "bg-gray-400 cursor-not-allowed" : selected === "donors" ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"} text-white`}
+                      className={`mt-2 sm:mt-0 px-4 py-2 rounded-lg shadow-md ${status[`${selected}-${index}`] ? "bg-gray-400 cursor-not-allowed" : selected === "donors" ? "bg-blue-500 hover:bg-blue-600" : "bg-green-500 hover:bg-green-600"} text-white`}
                       onClick={() => handleAction(index)}
                       disabled={status[`${selected}-${index}`]}
                     >
@@ -118,14 +109,13 @@ function LocatePage() {
             </div>
           </div>
 
-          {/* Right Side Buttons (20%) */}
-          <div className="w-1/5 flex flex-col items-end gap-4 p-6">
+          <div className="w-full sm:w-1/5 flex flex-col items-end gap-4 p-2 sm:p-6">
             {buttons
               .filter((button) => button.id !== selected)
               .map((button) => (
                 <button
                   key={button.id}
-                  className={`px-6 py-3 text-lg font-semibold text-white rounded-lg shadow-md w-full ${button.color}`}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 text-base sm:text-lg font-semibold text-white rounded-lg shadow-md w-full ${button.color}`}
                   onClick={() => setSelected(button.id)}
                 >
                   {button.text}
