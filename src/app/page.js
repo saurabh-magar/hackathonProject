@@ -8,11 +8,27 @@ export default function LocatePage() {
   const [pickupForm, setPickupForm] = useState(null); // Store selected biogas plant
   const [wasteDetails, setWasteDetails] = useState({ quantity: "", description: "" });
 
-  // Sample data arrays
+  // Sample data arrays with coordinates
   const donors = [
-    { name: "John Doe", location: "New York", foodQuantity: "10 kg", estimatedExpiry: "2025-02-20", foodType: "Veg" },
-    { name: "Alice Smith", location: "Los Angeles", foodQuantity: "5 kg", estimatedExpiry: "2025-02-19", foodType: "Non-Veg" },
+    {
+      name: "John Doe",
+      location: "New York",
+      foodQuantity: "10 kg",
+      estimatedExpiry: "2025-02-20",
+      foodType: "Veg",
+      coordinates: { lat: 40.7128, lng: -74.006 }, // Donor's coordinates
+    },
+    {
+      name: "Alice Smith",
+      location: "Los Angeles",
+      foodQuantity: "5 kg",
+      estimatedExpiry: "2025-02-19",
+      foodType: "Non-Veg",
+      coordinates: { lat: 34.0522, lng: -118.2437 }, // Donor's coordinates
+    },
   ];
+
+  const ngoCoordinates = { lat: 28.6139, lng: 77.209 }; // NGO's coordinates
 
   const volunteers = [
     { name: "Bob Johnson", mobileNumber: "1234567890", distance: "5 km" },
@@ -53,6 +69,15 @@ export default function LocatePage() {
   const handlePickupRequest = () => {
     alert(`Pickup Requested!\nQuantity: ${wasteDetails.quantity}\nDescription: ${wasteDetails.description}`);
     setPickupForm(null); // Close the form after submission
+  };
+
+  // Function to redirect to the map with donor and NGO coordinates
+  const redirectToMap = (donorCoordinates) => {
+    const { lat: startLat, lng: startLng } = donorCoordinates;
+    const { lat: destLat, lng: destLng } = ngoCoordinates;
+
+    const mapUrl = `https://hackathon-project-rnzy.vercel.app/map?startLat=${startLat}&startLng=${startLng}&destLat=${destLat}&destLng=${destLng}`;
+    window.location.href = mapUrl;
   };
 
   return (
@@ -108,7 +133,7 @@ export default function LocatePage() {
                         </button>
                         <button
                           className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md"
-                          onClick={() => alert(`Viewing direction to ${item.location}`)}
+                          onClick={() => redirectToMap(item.coordinates)}
                         >
                           View Direction
                         </button>
