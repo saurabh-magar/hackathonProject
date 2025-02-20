@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-function LocatePage() {
+export default function LocatePage() {
   const [selected, setSelected] = useState(null);
   const [status, setStatus] = useState({});
   const [pickupForm, setPickupForm] = useState(null); // Store selected biogas plant
@@ -91,36 +91,60 @@ function LocatePage() {
                   key={index}
                   className="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-center"
                 >
-                  <div className="text-center sm:text-left w-full">
-                    {selected === "donors" && (
-                      <>
+                  {selected === "donors" && (
+                    <div className="flex justify-between items-start w-full">
+                      <div className="text-center sm:text-left">
                         <p className="text-lg font-semibold text-gray-800">{item.name}</p>
                         <p className="text-gray-600">📍 {item.location}</p>
                         <p className="text-gray-600">🍱 {item.foodQuantity} - Expiry: {item.estimatedExpiry}</p>
                         <p className="text-gray-600">🥗 Type: {item.foodType}</p>
-                      </>
-                    )}
-                    {selected === "volunteers" && (
-                      <>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md"
+                          onClick={() => alert(`Viewing details for ${item.name}`)}
+                        >
+                          View Detail
+                        </button>
+                        <button
+                          className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md"
+                          onClick={() => alert(`Viewing direction to ${item.location}`)}
+                        >
+                          View Direction
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {selected === "volunteers" && (
+                    <div className="flex justify-between items-start w-full">
+                      <div className="text-center sm:text-left">
                         <p className="text-lg font-semibold text-gray-800">{item.name}</p>
                         <p className="text-gray-600">📞 {item.mobileNumber}</p>
                         <p className="text-gray-600">📍 Distance: {item.distance}</p>
-                      </>
-                    )}
-                    {selected === "biogas" && (
-                      <>
-                        <p className="text-lg font-semibold text-gray-800">
-                          🏭 Biogas Plant - Distance: {item.distance}
-                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2">
                         <button
-                          className="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-md"
-                          onClick={() => handleBiogasClick(index)}
+                          className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-lg shadow-md"
+                          onClick={() => alert(`Contacting ${item.name} at ${item.mobileNumber}`)}
                         >
-                          Request Pickup
+                          Contact
                         </button>
-                      </>
-                    )}
-                  </div>
+                      </div>
+                    </div>
+                  )}
+                  {selected === "biogas" && (
+                    <>
+                      <p className="text-lg font-semibold text-gray-800">
+                        🏭 Biogas Plant - Distance: {item.distance}
+                      </p>
+                      <button
+                        className="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-md"
+                        onClick={() => handleBiogasClick(index)}
+                      >
+                        Request Pickup
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
@@ -181,5 +205,3 @@ function LocatePage() {
     </div>
   );
 }
-
-export default LocatePage;
